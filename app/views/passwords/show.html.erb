@@ -1,0 +1,43 @@
+<%= link_to "← Retour", root_path, class: "block mb-4 no-underline text-xs text-pink-400" %>
+<div class="mb-4 flex justify-between items-center">
+  <h1 class="mb-0">
+    <%= @password.url %>
+    <%= link_to @password.url, target: :_blank do %>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline-block text-pink-400 size-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+      </svg>
+
+      </h1>
+
+    <% end %>
+
+    <%= link_to "Modifier", edit_password_path(@password) if @password.editable_by?(current_user) %>
+
+</div>
+
+<h2>Informations</h2>
+<div class="flex items-center gap-1">
+  <pre class="flex-grow"><code><%= @password.username %></code></pre>
+  <%= button_tag "Copier", class: "px-2 py-1 bg-pink-50 rounded", data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_content_value: @password.username } %>
+</div>
+
+<div class="flex items-center gap-1">
+  <pre class="flex-grow"><code><%= @password.password %></code></pre>
+  <%= button_tag "Copier", class: "px-2 py-1 bg-pink-50 rounded", data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_content_value: @password.password } %>
+</div>
+
+
+<h4>Partager</h4>
+<div class="felx flex-col gap-1 divide-y divide-gray-100">
+  <%= link_to "Ajouter un utilisateur", new_password_share_path(@password) if @password.shareable_by?(current_user)%>
+  <div class="flex justify-between items-center">
+    <% @password.user_passwords.includes(:user).each do |user_password| %>
+      <div><%= user_password.user.email %></div>
+      <div><%= user_password.role %></div>
+      <%= button_to "Supprimer", password_share_path(@password, user_password.user), method: :delete, data: {turbo_confirm: "Êtes vous sûr ?"} if @password.shareable_by?(current_user) %>
+    <% end %>
+  </div>
+
+</div>
+
+

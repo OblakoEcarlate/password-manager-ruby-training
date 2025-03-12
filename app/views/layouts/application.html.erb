@@ -23,6 +23,30 @@
   </head>
 
   <body>
-    <%= yield %>
+    <main class="prose mx-auto mt-28 px-5">
+      <p class="notice"><%= notice %></p>
+      <p class="alert"><%= alert %></p>
+
+      <nav class="flex justify-between">
+        <div class="flex items-center gap-2">
+          <%= link_to "Gestionnaire de mot de passe", root_path, class: "text-nl font-blod no-underline" %>
+          <ul class="list-none flex gap-2">
+            <li><%= link_to "Accueil", root_path %></li>
+          </ul>
+        </div>
+
+        <ul class="list-none flex items-center gap-2">
+          <% if user_signed_in? %>
+            <li><%= link_to "Profil", edit_user_registration_path %></li>
+            <li><%= button_to "Déconnexion", destroy_user_session_path %></li>
+          <% else %>
+            <li><%= link_to "S'incrire", new_user_registration_path %></li>
+            <li><%= button_to "Se connecter", new_user_session_path %></li>
+          <% end %>
+        </ul>
+      </nav>
+
+      <%= yield %>
+    </main>
   </body>
 </html>
